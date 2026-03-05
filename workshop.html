@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshop on AI and Economics</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link
+    href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* ───────────── ROOT ───────────── */
+
+    :root {
+      --cream: #f0f4f9;
+      --ink: #0d1b2e;
+      --rust: #1E407C;
+      --gold: #4a8cc7;
+      --mid: #3a5070;
+      --rule: #b0c4d8;
+      --card: #ffffff;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    /* ───────────── NAV ───────────── */
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: 70px;
+      background: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .nav-brand {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--cream);
+      text-decoration: none;
+    }
+
+    .desktop-menu {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .desktop-menu a {
+      color: var(--rule);
+      text-decoration: none;
+      font-size: .85rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .desktop-menu a:hover {
+      color: var(--gold);
+    }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 26px;
+      height: 2px;
+      background: white;
+      margin: 6px 0;
+    }
+
+    /* Mobile overlay */
+
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(-100%);
+      transition: transform .4s ease;
+    }
+
+    .nav-overlay.active {
+      transform: translateY(0);
+    }
+
+    .mobile-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      text-align: center;
+    }
+
+    .mobile-menu a {
+      font-size: 1.6rem;
+      color: var(--cream);
+      text-decoration: none;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    body.menu-open {
+      overflow: hidden;
+    }
+
+    @media(max-width:900px) {
+      .desktop-menu {
+        display: none;
+      }
+
+      .nav-toggle {
+        display: block;
+      }
+    }
+
+    /* ───────────── HERO ───────────── */
+
+    .hero {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 4rem 2rem;
+      background-color: rgba(255, 255, 255, 0.2);
+      background-image: url('uni-bg - Copy (4).jpeg');
+      background-size: cover;
+      background-position: center;
+      background-blend-mode: multiply;
+    }
+
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-family: 'EB Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    /* .hero-meta span::before {
+      content: "— ";
+      color: var(--cream);
+    } */
+
+
+    .hero-item {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .95rem;
+      color: var(--cream);
+      opacity: .9;
+    }
+
+    .hero-icon {
+      width: 18px;
+      height: 18px;
+      fill: var(--cream);
+      flex-shrink: 0;
+    }
+
+
+    /* ───────────── CONTENT ───────────── */
+
+    .content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section {
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--rule);
+      scroll-margin-top: 90px;
+    }
+
+    section:last-child {
+      border-bottom: none;
+    }
+
+    h2 {
+      font-family: 'EB Garamond', serif;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--mid);
+    }
+
+    /* ───────────── SCHEDULE ───────────── */
+
+    .schedule {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+
+    .schedule tr {
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .schedule tr:first-child {
+      border-top: 1px solid var(--rule);
+    }
+
+    .schedule tr:hover td {
+      background: rgba(196, 154, 60, .06);
+    }
+
+    .schedule td {
+      padding: 0.9rem 0.6rem;
+      /* vertical-align: top; */
+      font-size: 1.2rem;
+      color: var(--mid);
+    }
+
+    /* TIME COLUMN (HOURS) */
+    .schedule td:first-child {
+      width: 9rem;
+      font-weight: 500;
+      font-size: 1.2rem;
+      color: var(--ink);
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+      padding-right: 1rem;
+      text-align: left;
+
+    }
+
+    .schedule .topic-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--ink);
+      display: block;
+      margin-bottom: 0.2rem;
+      margin-top: 0;
+    }
+
+    /* SESSION TITLES */
+
+    .topic-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--ink);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .speakers {
+      font-size: .95rem;
+      color: var(--rust);
+      margin-bottom: .4rem;
+    }
+
+    .highlight td {
+      background: rgba(0, 0, 0, .03);
+    }
+
+    @media(max-width:768px) {
+
+      /* .schedule tr{ display:block; padding:1rem 0; }
+  .schedule td{ display:block; width:100%; } */
+      .schedule td:first-child {
+        margin-bottom: .4rem;
+      }
+    }
+
+    /* ───────────── ORGANIZERS ───────────── */
+
+    .organizers {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .organizer-card {
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .organizer-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    .organizer-info {
+      padding: 1rem;
+    }
+
+    .organizer-name {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .organizer-affil {
+      font-size: .9rem;
+      margin: .4rem 0;
+      color: var(--mid);
+    }
+
+    .organizer-link {
+      font-size: .85rem;
+      color: var(--rust);
+      text-decoration: none;
+    }
+
+    .organizer-link:hover {
+      text-decoration: underline;
+    }
+
+    details summary {
+      cursor: pointer;
+      font-size: .8rem;
+      color: var(--gold);
+      margin-top: .5rem;
+      text-transform: uppercase;
+    }
+
+    details p {
+  font-size: .8rem;
+}
+
+    /* ───────── CALENDAR BUTTON ───────── */
+
+    .calendar-wrapper {
+      position: relative;
+      margin-top: 2rem;
+    }
+
+    /* .calendar-btn {
+      background: var(--cream);
+      color: var(--rust);
+      border: none;
+      padding: .8rem 1.4rem;
+      font-size: .9rem;
+      font-weight: 500;
+      letter-spacing: .05em;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background .2s ease;
+    } */
+
+    .calendar-btn:hover {
+      background: var(--card);
+      color: var(--ink);
+    }
+
+
+    .calendar-btn {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      background: var(--ink);
+      color: var(--cream);
+      border: none;
+      padding: .6rem 1.2rem;
+      font-size: .9rem;
+      font-weight: 500;
+      letter-spacing: .05em;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all .2s ease;
+    }
+
+
+
+    .calendar-dropdown {
+      position: absolute;
+      top: 110%;
+      left: 0;
+      background: white;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .1);
+      display: none;
+      flex-direction: column;
+      min-width: 220px;
+      overflow: hidden;
+      z-index: 100;
+    }
+
+    .calendar-dropdown a {
+      padding: .8rem 1rem;
+      text-decoration: none;
+      font-size: .9rem;
+      color: var(--ink);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .calendar-dropdown a:last-child {
+      border-bottom: none;
+    }
+
+    .calendar-dropdown a:hover {
+      background: var(--cream);
+    }
+
+    .calendar-wrapper.active .calendar-dropdown {
+      display: flex;
+    }
+
+    footer {
+      background: var(--ink);
+      color: var(--mid);
+      text-align: center;
+      padding: 2rem;
+      font-size: .85rem;
+    }
+
+    .paper {
+      margin-top: .6rem;
+      padding-left: 0.8rem;
+      border-left: 2px solid var(--rule);
+    }
+
+    .paper-title {
+      display: block;
+      font-family: 'EB Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .speakers {
+      display: block;
+      font-size: 1rem;
+      color: var(--rust);
+      margin-top: 0.1rem;
+    }
+
+    strong {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+    }
+
+    /* ───────────── LOCATION ───────────── */
+
+    .location-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 3rem;
+      align-items: start;
+      margin-top: 2rem;
+    }
+
+    .location-info {
+      font-size: 0.98rem;
+    }
+
+    .location-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .location-logo {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+    }
+
+    .location-name {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .location-city {
+      font-size: .9rem;
+      color: var(--rust);
+      letter-spacing: .03em;
+    }
+
+    /* ───────────── LOCATION MAP ───────────── */
+
+    .location-map {
+      border-radius: 25px;
+      overflow: hidden;
+      border: 1px solid var(--rule);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      /* filter: grayscale(100%) contrast(100%); */
+      transition: filter .4s ease;
+    }
+
+    .location-map:hover {
+      filter: grayscale(40%) contrast(105%);
+    }
+
+    .location-map iframe {
+      width: 100%;
+      height: 420px;
+      border: 0;
+    }
+
+
+
+    @media(max-width:900px) {
+
+      .location-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .location-map iframe {
+        height: 360px;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="nav">
+    
+  <a href="#" class="nav-brand"></a>
+    <ul class="desktop-menu">
+      <li><a href="#">Home</a></li>
+      <li><a href="#program">Program</a></li>
+      <li><a href="#organization">Organization</a></li>
+      <li><a href="#location">Location</a></li>
+    </ul>
+
+    <button class="nav-toggle" aria-label="Open Menu">
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="nav-overlay">
+      <ul class="mobile-menu">
+        <li><a href="#">Home</a></li>
+        <li><a href="#program">Program</a></li>
+        <li><a href="#organization">Organization</a></li>
+        <li><a href="#location">Location</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>Workshop on AI and Economics</h1>
+      <div class="hero-meta">
+
+        <div class="hero-item">
+          <svg viewBox="0 0 24 24" class="hero-icon">
+            <path
+              d="M7 2v2H5a2 2 0 0 0-2 2v2h18V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7zm14 8H3v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V10z" />
+          </svg>
+          <span>April 13–14, 2026</span>
+        </div>
+
+        <div class="hero-item">
+          <svg viewBox="0 0 24 24" class="hero-icon">
+            <path
+              d="M12 2C8 2 5 5 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-4-3-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z" />
+          </svg>
+          <span>Penn State University</span>
+        </div>
+
+        <!-- <div class="calendar-wrapper">
+          <button class="calendar-btn">
+            <svg viewBox="0 0 24 24" class="hero-icon">
+              <path
+                d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v2h18V6a2 2 0 0 0-2-2zm2 6H3v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V10z" />
+            </svg>
+            Add to Calendar
+          </button>
+
+          <div class="calendar-dropdown">
+            <a id="googleCal" target="_blank">Google Calendar</a>
+            <a id="outlookCal" target="_blank">Outlook</a>
+            <a href="ai-econ-workshop.ics" download>Apple / iCal (.ics)</a>
+          </div>
+        </div> -->
+
+      </div>
+      <div class="calendar-wrapper">
+        <button class="calendar-btn">
+          <!-- <svg viewBox="0 0 24 24" class="hero-icon">
+              <path
+                d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v2h18V6a2 2 0 0 0-2-2zm2 6H3v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V10z" />
+            </svg> -->
+          Add to Calendar
+          <svg viewBox="0 0 24 24" class="hero-icon">
+            <!-- calendar frame -->
+            <rect x="3" y="4" width="18" height="17" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2" />
+
+            <!-- binding rings -->
+            <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" />
+            <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" />
+
+            <!-- header separator -->
+            <line x1="3" y1="9" x2="21" y2="9" stroke="currentColor" stroke-width="2" />
+
+            <!-- date dots -->
+            <circle cx="8" cy="13" r="1.2" fill="currentColor" />
+            <circle cx="12" cy="13" r="1.2" fill="currentColor" />
+            <circle cx="16" cy="13" r="1.2" fill="currentColor" />
+
+            <circle cx="8" cy="17" r="1.2" fill="currentColor" />
+            <circle cx="12" cy="17" r="1.2" fill="currentColor" />
+            <circle cx="16" cy="17" r="1.2" fill="currentColor" />
+          </svg>
+        </button>
+        <div class="calendar-dropdown">
+          <a id="googleCal" target="_blank">Google Calendar</a>
+          <a id="outlookCal" target="_blank">Outlook</a>
+          <a href="ai-econ-workshop.ics" download>Apple / iCal (.ics)</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="content">
+      <section id="overview">
+        <p style="text-align: justify;">The AI and Economics Workshop brings together researchers to present and discuss recent work at the
+          intersection of artificial intelligence and economics.</p>
+
+        <p style="text-align: justify;">The inaugural edition will take place on April 13 and 14, 2026 at Penn State University.</p>
+      </section>
+
+      <section id="program">
+        <h2>Program</h2>
+      <p style="font-size:.85rem;font-style:italic;">This preliminary program is subject to change.</p>
+        <p><strong>Monday, April 13</strong></p>
+        <table class="schedule">
+          <tr class="highlight">
+            <td>08:00–08:30</td>
+            <td><span class="topic-title">Registration and Breakfast</span></td>
+          </tr>
+          <tr>
+            <td>08:30–10:00</td>
+            <td>
+
+              <span class="topic-title">Search</span>
+
+              <div class="paper">
+                <span class="paper-title">Auction Design for Artificial-Intelligence-Based Sponsored Search</span>
+                <span class="speakers"><a href="https://www.ausubel.com/" target="_blank">Lawrence Ausubel</a><sup>*</sup></span>
+              </div>
+
+              <div class="paper">
+                <span class="paper-title">Subsidizing Sequential Search</span>
+                <span class="speakers"><a href="https://sites.google.com/view/scandelas" target="_blank">Salvador Candelas</a><sup>*</sup>, Nicole Immorlica, and Brendan Lucier</span>
+              </div>
+
+            </td>
+          </tr>
+          <tr>
+            <td>10:00–10:30</td>
+            <td><span class="topic-title">Coffee Break</span></td>
+          </tr>
+          <tr>
+            <td>10:30–12:00</td>
+            <td>
+
+              <span class="topic-title">Pricing Algorithms</span>
+
+              <div class="paper">
+                <span class="paper-title">Paper 1</span>
+                <span class="speakers">Matthew Leisten (FTC)</span>
+              </div>
+
+              <div class="paper">
+                <span class="paper-title">Algorithmic Collusion by Large Language Models</span>
+                <span class="speakers">Sara Fish, Yannai A. Gonczarowski, and <a href="https://rshorrer.weebly.com/" target="_blank">Ran I. Shorrer</a><sup>*</sup></span>
+              </div>
+
+            </td>
+          </tr>
+          <tr class="highlight">
+            <td>12:20–13:30</td>
+            <td><span class="topic-title">Lunch</span></td>
+          </tr>
+          <tr>
+            <td>13:30–15:00</td>
+            <td><span class="topic-title">Human Beliefs about AI</span></td>
+          </tr>
+          <tr>
+            <td>15:00–15:30</td>
+            <td><span class="topic-title">Coffee Break</span></td>
+          </tr>
+          <tr>
+            <td>15:30–17:00</td>
+            <td>
+              <span class="topic-title">Large Language Models</span>
+             <div class="paper">
+                <span class="paper-title">Strategic Algorithmic Monoculture: Experimental Evidence from Coordination Games</span>
+                <span class="speakers">Gonzalo Ballestero, Hadi Hosseini, Samarth Khanna, and Ran I. Shorrer</span>
+              </div>
+
+              <div class="paper">
+                <span class="paper-title">What Do LLMs Want?</span>
+                <span class="speakers">Thomas R. Cook, Sophia Kazinnik, Zach Modig, and <a href="https://www.federalreserve.gov/econres/nathan-m-palmer.htm" target="_blank">Nathan M. Palmer</a><sup>*</sup></span>
+              </div>
+
+              </td>
+          </tr>
+          <tr class="highlight">
+            <td>17:00–19:00</td>
+            <td><span class="topic-title">Dinner</span></td>
+          </tr>
+        </table>
+
+        <p style="margin-top: 5rem;"><strong>Tuesday, April 14</strong></p>
+        <table class="schedule">
+          <tr class="highlight">
+            <td>08:00–08:30</td>
+            <td><span class="topic-title">Breakfast</span></td>
+          </tr>
+          <tr>
+            <td>08:30–10:00</td>
+            <td><span class="topic-title">Macroeconomics and Finance</span></td>
+          </tr>
+          <tr>
+            <td>10:00–10:30</td>
+            <td><span class="topic-title">Coffee Break</span></td>
+          </tr>
+          <tr>
+            <td>10:30–12:00</td>
+            <td><span class="topic-title">Topic 6: TBD</span></td>
+          </tr>
+          <tr class="highlight">
+            <td>12:00–13:30</td>
+            <td><span class="topic-title">Lunch</span></td>
+          </tr>
+        </table>
+
+        
+
+      </section>
+
+      <section id="organization">
+        <h2>Organization</h2>
+
+        <div class="organizers">
+
+           <div class="organizer-card">
+            <img class="organizer-img"
+              src="https://econ.la.psu.edu/wp-content/uploads/sites/5/2022/08/gonzalo_3_size-1024x819.png"
+              alt="Gonzalo Ballestero">
+            <div class="organizer-info">
+              <div class="organizer-name">Gonzalo Ballestero</div>
+              <div class="organizer-affil">Penn State University</div>
+              <a class="organizer-link" href="https://ballesterogh.github.io/" target="_blank">Website</a>
+              <details>
+                <summary>Bio</summary>
+                <p style="text-align: justify;">Gonzalo is a Ph.D. candidate in Economics at Penn State University working on market design and AI
+                  behavioral science.</p>
+              </details>
+            </div>
+          </div>
+
+         
+
+          <div class="organizer-card">
+            <img class="organizer-img" src="hadih.jpg" alt="Hadi Hosseini">
+            <div class="organizer-info">
+              <div class="organizer-name">Hadi Hosseini</div>
+              <div class="organizer-affil">Penn State University</div>
+              <a class="organizer-link" href="https://faculty.ist.psu.edu/hadi/" target="_blank">Website</a>
+              <details>
+                <summary>Bio</summary>
+                <p style="text-align: justify;">Hadi is an Associate Professor in Informatics and Intelligent Systems at Penn State University.</p>
+              </details>
+            </div>
+          </div>
+
+          <div class="organizer-card">
+            <img class="organizer-img"
+              src="https://psu-gatsby-files-prod.s3.amazonaws.com/s3fs-public/2026/01/ran-headshot.jpg"
+              alt="Ran I. Shorrer">
+            <div class="organizer-info">
+              <div class="organizer-name">Ran I. Shorrer</div>
+              <div class="organizer-affil">Penn State University</div>
+              <a class="organizer-link" href="https://rshorrer.weebly.com" target="_blank">Website</a>
+              <details>
+                <summary>Bio</summary>
+                <p style="text-align: justify;">Ran is an Associate Professor of Economics at Penn State University. His research has been recognized
+                  with the Market Design Impact Award from INFORMS.</p>
+              </details>
+            </div>
+          </div>
+
+            <div class="organizer-card">
+            <img class="organizer-img" src="chloe.jpg" alt="Chloe Tergiman">
+            <div class="organizer-info">
+              <div class="organizer-name">Chloe Tergiman</div>
+              <div class="organizer-affil">Penn State University</div>
+              <a class="organizer-link" href="https://sites.psu.edu/chloetergiman/" target="_blank">Website</a>
+              <details>
+                <summary>Bio</summary>
+                <p style="text-align: justify;">Chloe is an Associate Professor in Smeal College of Business at Penn State University.</p>
+              </details>
+            </div>
+          </div>
+
+         
+
+        </div>
+      </section>
+
+      <section id="location">
+        <h2>Location</h2>
+
+        <div class="location-grid">
+
+          <div class="location-info">
+
+            <div class="location-header">
+              <img src="pennsylvania_logo.png" alt="The Pennsylvania State University" class="location-logo">
+              <div>
+                <div class="location-name">Penn State University</div>
+              </div>
+            </div>
+
+            <p style="text-align: justify;">
+              Penn State University is located in State College, Pennsylvania. Founded in 1855, the university and the town have developed alongside one another, forming the vibrant college community often known as <em>"Happy Valley"</em>.
+            </p>
+
+            <p style="text-align: justify;">
+              <strong>Getting to Penn State</strong><br>
+              The closest airport is University Park Airport (SCE), about 10 minutes
+              from campus by car. It offers daily connecting flights through
+              Philadelphia and Washington Dulles.
+            </p>
+
+            <p style="text-align: justify;">
+              By car: ~3.5 hours from Washington, D.C., 3 hours from Philadelphia,
+              3.5 hours from Ithaca, and ~4.5 hours from New York City.
+            </p>
+
+          </div>
+
+          <div class="location-map">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6040.788632052824!2d-77.8709359235271!3d40.79732803238675!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89cea6247f5d0291%3A0x8eae17d67bcc3fdd!2sPenn%20State%20Graduate%20School%20-%20Kern%20Building!5e0!3m2!1sen!2sus!4v1772149375211!5m2!1sen!2sus"
+              loading="lazy">
+            </iframe>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    © 2026 AI and Economics Workshop · Penn State University
+  </footer>
+
+  <script>
+    const toggle = document.querySelector('.nav-toggle');
+    const overlay = document.querySelector('.nav-overlay');
+
+    toggle.addEventListener('click', () => {
+      overlay.classList.toggle('active');
+      document.body.classList.toggle('menu-open');
+    });
+
+    document.querySelectorAll('.mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        overlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
+      });
+    });
+  </script>
+  <script>
+
+    // Toggle dropdown
+    const calWrapper = document.querySelector('.calendar-wrapper');
+    const calBtn = document.querySelector('.calendar-btn');
+
+    calBtn.addEventListener('click', () => {
+      calWrapper.classList.toggle('active');
+    });
+
+    // Close if clicking outside
+    document.addEventListener('click', (e) => {
+      if (!calWrapper.contains(e.target)) {
+        calWrapper.classList.remove('active');
+      }
+    });
+
+    // Event details
+    const eventTitle = "Workshop on AI and Economics";
+    const eventLocation = "Penn State University, State College, PA";
+    const eventDescription = "AI and Economics Workshop, April 13–14, 2026.";
+
+    // Dates in UTC (Google format YYYYMMDDTHHmmssZ)
+    const start = "20260413T120000Z";
+    const end = "20260414T210000Z";
+
+    // Google Calendar link
+    document.getElementById('googleCal').href =
+      `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${start}/${end}&details=${encodeURIComponent(eventDescription)}&location=${encodeURIComponent(eventLocation)}`;
+
+    // Outlook Web link
+    document.getElementById('outlookCal').href =
+      `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(eventTitle)}&startdt=2026-04-13T08:00:00&enddt=2026-04-14T17:00:00&body=${encodeURIComponent(eventDescription)}&location=${encodeURIComponent(eventLocation)}`;
+
+  </script>
+</body>
+
+</html>
